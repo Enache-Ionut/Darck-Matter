@@ -56,7 +56,7 @@ namespace SpotThatFireWebApp.Controllers
         public void Update()
         {
             string remoteUri = "https://firms.modaps.eosdis.nasa.gov/data/active_fire/c6/csv/MODIS_C6_Global_24h.csv";
-            string fileName = @"C:\WorkSpace\Work\Github\DarkMatter\data.csv", myStringWebResource = null;
+            string fileName = @"C:\WorkSpace\Programs\Git\DarkMatter\data.csv", myStringWebResource = null;
 
             // Create a new WebClient instance.
             using (WebClient myWebClient = new WebClient())
@@ -81,9 +81,11 @@ namespace SpotThatFireWebApp.Controllers
         {
             fireList.Clear();
 
-            var fires = CsvLoader.Load(@"C:\WorkSpace\Work\Github\DarkMatter\SpotThatFireWebApp\data.csv");
+            var fires = CsvLoader.Load(@"C:\WorkSpace\Programs\Git\DarkMatter\data.csv");
             foreach (var fire in fires)
             {
+                if (fire.Confidence < 50)
+                    continue;
                 fireList.Add(new Fire()
                 {
                     Brightness = fire.Brightness,
