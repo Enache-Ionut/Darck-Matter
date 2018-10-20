@@ -12,18 +12,19 @@
     </script>
 </head>
 <script>
-    function mapHeight() {
-        console.log(document.getElementsByClassName("body-content")[0].clientHeightFF)
-        return document.getElementsByClassName("body-content")[0].clientHeight;
-    }
+    //function mapHeight() {
+    //    return document.getElementsByClassName("body-content")[0].clientHeight;
+    //}
+    //document.getElementById("map").clientHeight = mapHeight();
 
-    document.getElementById("map").clientHeight = mapHeight();
+    //function disableScrollwheel(map) {
+    //    if (map) map.setOptions({ scrollwheel: false });
+    //}
+    //disableScrollwheel();
 
-    function disableScrollwheel(map) {
-        if (map) map.setOptions({ scrollwheel: false });
-    }
-
-    disableScrollwheel();
+    var keepLocation = false;
+    var currentLocation;
+    var markers = [];
 
     function initAutocomplete() {
         var map = new google.maps.Map(document.getElementById('map'), {
@@ -90,7 +91,35 @@
             });
             map.fitBounds(bounds);
         });
+
+        map.addListener('click', function (e) {
+            placeMarker(e.latLng, map);
+        });
     }
+
+    function reportFire() {
+        keepLocation = true;
+        console.log("fire reported");
+    }
+
+
+    function placeMarker(position, map) {
+        // if last pin was not reported, then remove it
+        if (!keepLocation && markers.length > 0)
+            markers[markers.length - 1].setMap(null);
+
+        keepLocation = false;
+        currentLocation = position;
+        var marker = new google.maps.Marker({
+            position: position,
+            map: map
+        });
+        map.panTo(position);
+
+        // store marker
+        markers.push(marker);
+    }
+
 </script>
 <body>
     <div class="navbar navbar-inverse navbar-dark navbar-fixed-top bg-dark flex-md-nowrap p-0 shadow">
@@ -98,6 +127,7 @@
             <a class="navbar-brand">Spot The Fire</a>
         </div>
     </div>
+
     <div class="body-content">
         @RenderBody()
     </div>
