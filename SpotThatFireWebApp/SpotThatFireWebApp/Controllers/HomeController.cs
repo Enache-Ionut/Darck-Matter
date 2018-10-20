@@ -3,6 +3,7 @@ using SpotThatFireWebApp.Models;
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Threading;
 using System.Web.Mvc;
 
 namespace SpotThatFireWebApp.Controllers
@@ -19,6 +20,7 @@ namespace SpotThatFireWebApp.Controllers
         public ActionResult Index()
         {
             UpdateData();
+
             var fires = fireList;
             var locations = new List<Fire>();
             foreach (Fire fire in fires)
@@ -33,20 +35,6 @@ namespace SpotThatFireWebApp.Controllers
             return View(locations);
         }
 
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
-        }
-
 
         #region UpdateData
 
@@ -56,22 +44,29 @@ namespace SpotThatFireWebApp.Controllers
             var startTimeSpan = TimeSpan.Zero;
             var periodTimeSpan = TimeSpan.FromSeconds(30);
 
+            Update();
+
             timer = new System.Threading.Timer((e) =>
             {
-                string remoteUri = "https://firms.modaps.eosdis.nasa.gov/data/active_fire/c6/csv/MODIS_C6_Global_24h.csv";
-                string fileName = @"C:\WorkSpace\Work\Github\DarkMatter\data.csv", myStringWebResource = null;
-
-                // Create a new WebClient instance.
-                using (WebClient myWebClient = new WebClient())
-                {
-                    myStringWebResource = remoteUri;
-                    // Download the Web resource and save it into the current filesystem folder.
-                    myWebClient.DownloadFile(myStringWebResource, fileName);
-                }
-
-                fireList = GetData();
-
+                Update();
             }, null, startTimeSpan, periodTimeSpan);
+        }
+
+
+        public void Update()
+        {
+            string remoteUri = "https://firms.modaps.eosdis.nasa.gov/data/active_fire/c6/csv/MODIS_C6_Global_24h.csv";
+            string fileName = @"C:\WorkSpace\Work\Github\DarkMatter\data.csv", myStringWebResource = null;
+
+            // Create a new WebClient instance.
+            using (WebClient myWebClient = new WebClient())
+            {
+                myStringWebResource = remoteUri;
+                // Download the Web resource and save it into the current filesystem folder.
+                myWebClient.DownloadFile(myStringWebResource, fileName);
+            }
+
+            fireList = GetData();
         }
 
 

@@ -158,6 +158,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Logic\ActionExecute.cs" />
     <Compile Include="Logic\FireLogic.cs" />
     <Compile Include="Logic\GpsUtil.cs" />
     <Compile Include="Models\Fire.cs" />
