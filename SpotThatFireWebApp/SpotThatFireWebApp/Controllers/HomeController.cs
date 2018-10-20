@@ -9,24 +9,20 @@ namespace SpotThatFireWebApp.Controllers
     {
         public ActionResult Index()
         {
-            return View();
+            var fires = this.GetData();
+            var locations = new List<Fire>();
+            foreach (Fire fire in fires)
+            {
+                var f = new Fire()
+                {
+                    Latitude = fire.Latitude,
+                    Longitude = fire.Longitude
+                };
+                locations.Add(f);
+            }
+            return View(locations);
         }
-
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
-        }
-
-
+    
         #region Get Data
 
         private List<Fire> GetData()

@@ -1,7 +1,16 @@
-﻿@{
+﻿@model List<SpotThatFireWebApp.Models.Fire>
+
+@{
     ViewBag.Title = "Home Page";
 }
 
 <div id="map"></div>
 
 <button type="button" style="position: absolute; bottom: 30px; right: 30px" class="btn btn-danger">Report</button>
+
+@section scripts {
+    <script>
+        locations = @Html.Raw(Json.Encode(@Model));
+    </script>
+}
+@Scripts.Render("~/bundles/addFires")
