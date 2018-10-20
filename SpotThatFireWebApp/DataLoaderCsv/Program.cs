@@ -11,7 +11,8 @@ namespace DataLoaderCsv
     {
         static void Main(string[] args)
         {
-            var data = CsvLoader.Load(@"c:\test\data.csv");
+
+            var data = CsvLoader.Load(@"..\..\..\data.csv");
             int i = 0; i++;
         }
     }
