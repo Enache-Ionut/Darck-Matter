@@ -29,6 +29,11 @@ namespace SpotThatFireWebApp
             return d;
         }
 
+        public static bool IsSameLocation(double lat1, double lon1, double lat2, double lon2)
+        {
+            return Distance(lat1, lon1, lat2, lon2) < 100;
+        }
+
         private static double ToRadians(double degrees)
         {
             return degrees * Math.PI / 180;
