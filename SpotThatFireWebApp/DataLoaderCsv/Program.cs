@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.VisualBasic.FileIO;
 
 namespace DataLoaderCsv
 {
@@ -10,6 +11,8 @@ namespace DataLoaderCsv
     {
         static void Main(string[] args)
         {
+            var data = CsvLoader.Load(@"c:\test\data.csv");
+            int i = 0; i++;
         }
     }
 }
