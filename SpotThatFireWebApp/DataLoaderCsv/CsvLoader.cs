@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SpotThatFireWebApp.Models;
 using Microsoft.VisualBasic.FileIO;
 
 namespace DataLoaderCsv
@@ -25,11 +21,11 @@ namespace DataLoaderCsv
         Daynight
     }
 
-    class CsvLoader
+    public class CsvLoader
     {
-        public static IEnumerable<SpotThatFireWebApp.Models.Fire> Load(string csvLocation)
+        public static IEnumerable<FireModel> Load(string csvLocation)
         {
-            List<SpotThatFireWebApp.Models.Fire> retList = new List<SpotThatFireWebApp.Models.Fire>();
+            List<FireModel> retList = new List<FireModel>();
 
             TextFieldParser parser = new TextFieldParser(csvLocation);
             parser.TextFieldType = FieldType.Delimited;
@@ -48,7 +44,7 @@ namespace DataLoaderCsv
                 string acqDate = fields[(int)CsvFields.Acq_date].Replace("-", "/");
                 string acqTime = fields[(int)CsvFields.Acq_time].Insert(2, ":");
 
-                SpotThatFireWebApp.Models.Fire fire = new SpotThatFireWebApp.Models.Fire();
+                FireModel fire = new FireModel();
                 fire.Latitude = Convert.ToDouble(fields[(int)CsvFields.Latitude]);
                 fire.Longitude = Convert.ToDouble(fields[(int)CsvFields.Longitude]);
                 fire.Brightness = Convert.ToDouble(fields[(int)CsvFields.Brightness]);
