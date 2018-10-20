@@ -5,15 +5,31 @@
 }
 <input id="pac-input" class="controls form-control form-control-dark" type="text" placeholder="Search a location">
 <div id="map"></div>
-
 @section scripts {
     <script>
+
+        var locations = [];
         locations = @Html.Raw(Json.Encode(@Model));
+        $(window).load(function () {
+            var map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: -33.8688, lng: 151.2195 },
+                zoom: 10,
+                disableDefaultUI: true
+            });
+            console.log(locations)
+            for (var l = 0; l < locations.length; l++) {
+
+                var point = { lat: locations[l].Latitude, lng: locations[l].Longitude };
+                var marker = new google.maps.Marker({ position: point, map: map });
+            }
+        });
+        
+
     </script>
 }
-@Scripts.Render("~/bundles/addFires")
-<button type="button" 
-        style="position: absolute; bottom: 30px; right: 30px" 
+@*@Scripts.Render("~/bundles/addFires")*@
+<button type="button"
+        style="position: absolute; bottom: 30px; right: 30px"
         class="btn btn-danger"
         onclick="reportFire()">
     Report
