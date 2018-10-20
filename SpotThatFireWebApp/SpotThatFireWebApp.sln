@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpotThatFireWebApp", "SpotT
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpotThatFireDatabase", "SpotThatFireDatabase\SpotThatFireDatabase.csproj", "{4F75B938-30D2-446F-9A88-0EC060CA02E3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataLoaderCsv", "DataLoaderCsv\DataLoaderCsv.csproj", "{8ACEE513-EA62-43F9-838F-EDD7B554ECC5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{4F75B938-30D2-446F-9A88-0EC060CA02E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4F75B938-30D2-446F-9A88-0EC060CA02E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4F75B938-30D2-446F-9A88-0EC060CA02E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8ACEE513-EA62-43F9-838F-EDD7B554ECC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8ACEE513-EA62-43F9-838F-EDD7B554ECC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8ACEE513-EA62-43F9-838F-EDD7B554ECC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8ACEE513-EA62-43F9-838F-EDD7B554ECC5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
