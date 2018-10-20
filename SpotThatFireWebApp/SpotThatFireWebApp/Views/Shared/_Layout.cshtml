@@ -8,56 +8,9 @@
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     <script async defer
-            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBph4ZtJpF5M0Jl53MwdwvZytqGzauEf1M&callback=initMap">
-    </script>
-    <script>
-        function initMap() {
-            var uluru = { lat: -25.344, lng: 131.036 };
-            var map = new google.maps.Map(
-                document.getElementById('map'), { zoom: 4, center: uluru, disableDefaultUI: true });
-            var marker = new google.maps.Marker({ position: uluru, map: map });
-        }
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBph4ZtJpF5M0Jl53MwdwvZytqGzauEf1M&callback=initAutocomplete&libraries=places">
     </script>
 </head>
-<body>
-
-    @*<nav class="navbar navbar-dark fixed-top bg-dark">
-        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Company name</a>
-        <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
-        <ul class="navbar-nav px-3">
-            <a class="nav-item text-nowrap">
-        </ul>
-    </nav>*@
-
-    <div class="navbar navbar-inverse navbar-dark navbar-fixed-top bg-dark flex-md-nowrap p-0 shadow">
-        <div class="container">
-            <div class="navbar-header">
-                <a class="navbar-brand " href="#">SpotTheFIRE</a>
-            </div>
-                <input class="form-control form-control-dark" type="text" placeholder="Search" aria-label="Search">
-            </div>
-    </div>
-    <div class="body-content">
-        @RenderBody()
-
-    </div>
-
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
-</body>
-<style>
-    html, body, #map_canvas {
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        padding: 0;
-    }
-
-    #map_canvas {
-        position: relative;
-    }
-</style>
 <script>
     function mapHeight() {
         console.log(document.getElementsByClassName("body-content")[0].clientHeightFF)
@@ -71,5 +24,164 @@
     }
 
     disableScrollwheel();
+
+    function initAutocomplete() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+            center: { lat: -33.8688, lng: 151.2195 },
+            zoom: 10,
+            disableDefaultUI: true
+        });
+
+        // Create the search box and link it to the UI element.
+        var input = document.getElementById('pac-input');
+        var searchBox = new google.maps.places.SearchBox(input);
+        map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+        // Bias the SearchBox results towards current map's viewport.
+        map.addListener('bounds_changed', function () {
+            searchBox.setBounds(map.getBounds());
+        });
+
+        var markers = [];
+        // Listen for the event fired when the user selects a prediction and retrieve
+        // more details for that place.
+        searchBox.addListener('places_changed', function () {
+            var places = searchBox.getPlaces();
+
+            if (places.length == 0) {
+                return;
+            }
+
+            // Clear out the old markers.
+            markers.forEach(function (marker) {
+                marker.setMap(null);
+            });
+            markers = [];
+
+            // For each place, get the icon, name and location.
+            var bounds = new google.maps.LatLngBounds();
+            places.forEach(function (place) {
+                if (!place.geometry) {
+                    console.log("Returned place contains no geometry");
+                    return;
+                }
+                var icon = {
+                    url: place.icon,
+                    size: new google.maps.Size(71, 71),
+                    origin: new google.maps.Point(0, 0),
+                    anchor: new google.maps.Point(17, 34),
+                    scaledSize: new google.maps.Size(25, 25)
+                };
+
+                // Create a marker for each place.
+                markers.push(new google.maps.Marker({
+                    map: map,
+                    icon: icon,
+                    title: place.name,
+                    position: place.geometry.location
+                }));
+
+                if (place.geometry.viewport) {
+                    // Only geocodes have viewport.
+                    bounds.union(place.geometry.viewport);
+                } else {
+                    bounds.extend(place.geometry.location);
+                }
+            });
+            map.fitBounds(bounds);
+        });
+    }
 </script>
+<body>
+    <div class="navbar navbar-inverse navbar-dark navbar-fixed-top bg-dark flex-md-nowrap p-0 shadow">
+        <div class="navbar-header">
+            <a class="navbar-brand">Spot The Fire</a>
+        </div>
+    </div>
+    <div class="body-content">
+        @RenderBody()
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+<style>
+    #description {
+        font-family: Roboto;
+        font-size: 15px;
+        font-weight: 300;
+    }
+
+    #infowindow-content .title {
+        font-weight: bold;
+    }
+
+    #infowindow-content {
+        display: none;
+    }
+
+    #map #infowindow-content {
+        display: inline;
+    }
+
+    .pac-card {
+        margin: 10px 10px 0 0;
+        border-radius: 2px 0 0 2px;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        outline: none;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        background-color: #fff;
+        font-family: Roboto;
+    }
+
+    #pac-container {
+        padding-bottom: 12px;
+        margin-right: 12px;
+    }
+
+    .pac-controls {
+        display: inline-block;
+        padding: 5px 11px;
+    }
+
+    .pac-controls label {
+        font-family: Roboto;
+        font-size: 13px;
+        font-weight: 300;
+    }
+
+    #pac-input {
+        background-color: #fff;
+        font-family: Roboto;
+        font-size: 15px;
+        font-weight: 300;
+        margin-left: 12px;
+        padding: 0 11px 0 13px;
+        text-overflow: ellipsis;
+        width: 400px;
+
+
+        position: absolute;
+        top: 30px !important;
+        left: 30px !important;
+    }
+
+    #pac-input:focus {
+        border-color: #4d90fe;
+    }
+
+    #title {
+        color: #fff;
+        background-color: #4d90fe;
+        font-size: 25px;
+        font-weight: 500;
+        padding: 6px 12px;
+    }
+
+    #target {
+        width: 345px;
+    }
+</style>
 </html>
