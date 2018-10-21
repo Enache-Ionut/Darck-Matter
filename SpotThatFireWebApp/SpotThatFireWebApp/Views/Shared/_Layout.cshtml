@@ -12,16 +12,6 @@
     </script>
 </head>
 <script>
-    //function mapHeight() {
-    //    return document.getElementsByClassName("body-content")[0].clientHeight;
-    //}
-    //document.getElementById("map").clientHeight = mapHeight();
-
-    //function disableScrollwheel(map) {
-    //    if (map) map.setOptions({ scrollwheel: false });
-    //}
-    //disableScrollwheel();
-
     var keepLocation = false;
     var currentLocation;
     var markers = [];
@@ -100,6 +90,22 @@
     function reportFire() {
         keepLocation = true;
         console.log("fire reported");
+        var model = new Object();
+        model.Latitude = currentLocation.lat();
+        model.Longitude = currentLocation.lng();
+         jQuery.ajax({
+            type: "POST",
+            url: "@Url.Action("SaveFireLocation", "Home")",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({ location: model }),
+            success: function (data) {
+                alert(data);
+            },
+            failure: function (errMsg) {
+                alert(errMsg);
+            }
+        });
     }
 
 

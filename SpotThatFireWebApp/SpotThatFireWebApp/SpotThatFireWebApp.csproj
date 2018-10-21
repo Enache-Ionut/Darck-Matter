@@ -162,6 +162,7 @@
     <Compile Include="Logic\FireLogic.cs" />
     <Compile Include="Logic\GpsUtil.cs" />
     <Compile Include="Models\Fire.cs" />
+    <Compile Include="Models\Location.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
