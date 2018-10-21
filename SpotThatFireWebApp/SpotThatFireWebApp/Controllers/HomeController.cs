@@ -2,9 +2,10 @@
 using SpotThatFireWebApp.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
-using System.Threading;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 
 namespace SpotThatFireWebApp.Controllers
 {
@@ -22,11 +23,20 @@ namespace SpotThatFireWebApp.Controllers
         {
             UpdateData();
 
+
             var fires = fireList;
             var locations = new List<Fire>();
 
             locations.AddRange(fireRaportedByAuthorities);
             locations.AddRange(GetLocation(fireList));
+
+            var jsonSerialiser = new JavaScriptSerializer();
+            var json = jsonSerialiser.Serialize(locations);
+
+            using (var writer = new StreamWriter(@"C:\inetpub\wwwroot\darkmatter.json"))
+            {
+                writer.Write(json);
+            }
 
             return View(locations);
         }
