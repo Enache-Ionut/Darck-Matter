@@ -17,9 +17,12 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     @IBOutlet weak var buttonView: UIView!
     @IBOutlet weak var centerMapView: UIView!
     @IBOutlet weak var centerOnLocationImageView: UIImageView!
-    @IBOutlet weak var showFiresOnMapSwitch: UISwitch!
     @IBOutlet weak var fireReportedView: UIView!
     @IBOutlet weak var fireReportedLabel: UILabel!
+    @IBOutlet weak var showFiresView: UIView!
+    @IBOutlet weak var showFiresImageVIEW: UIImageView!
+    
+    var showFiresEnabled = false
     
     var mapController: MapController?
     var locationManager = LocationManager()
@@ -31,6 +34,10 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         
         buttonView.layer.cornerRadius = 10
         buttonView.clipsToBounds = true
+        
+        showFiresView.layer.cornerRadius = 25
+        showFiresView.clipsToBounds = true
+        showFiresImageVIEW.image = UIImage(named: "showFiresInactive")
         
         fireReportedView.layer.cornerRadius = 10
         fireReportedView.clipsToBounds = true
@@ -61,16 +68,6 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     @IBAction func centerMapOnLocation(_ sender: Any) {
         if let mapCtrl = mapController {
             mapCtrl.centerMapOnLocation()
-        }
-    }
-    
-    @IBAction func showFiresOnMap(_ sender: Any) {
-        if(showFiresOnMapSwitch.isOn) {
-            mapController?.showFiresOnMap = true
-            mapController?.requestFirestAround()
-        } else {
-            mapController?.showFiresOnMap = false
-            mapController?.removeFiresAround()
         }
     }
     
@@ -108,6 +105,20 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     
     @objc func doubleTap(_ gesture: UITapGestureRecognizer) {
         self.scheduleNotification(timeInSeconds: 5)
+    }
+    
+    @IBAction func showFires(_ sender: Any) {
+        if(showFiresEnabled == true) {
+            showFiresEnabled = false
+            showFiresImageVIEW.image = UIImage(named: "showFiresInactive")
+            mapController?.showFiresOnMap = false
+            mapController?.removeFiresAround()
+        } else {
+            showFiresEnabled = true
+            showFiresImageVIEW.image = UIImage(named: "showFiresActive")
+            mapController?.showFiresOnMap = true
+            mapController?.requestFirestAround()
+        }
     }
     
     @IBAction func revealLocation(_ sender: UILongPressGestureRecognizer) {

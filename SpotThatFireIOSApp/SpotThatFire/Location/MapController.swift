@@ -58,6 +58,7 @@ class MapController {
     
     func showFiresAround() {
         if(showFiresOnMap) {
+            let x = fireAnnotations.count
             for annotation in fireAnnotations {
                 mkMapView.addAnnotation(annotation)
             }
