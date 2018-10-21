@@ -12,7 +12,8 @@ namespace SpotThatFireWebApp.Controllers
     {
         #region Members
 
-        private List<Fire> fireList = new List<Fire>();
+        private static List<Fire> fireRaportedByAuthorities = new List<Fire>();
+        private static List<Fire> fireList = new List<Fire>();
         private static System.Threading.Timer timer;
 
         #endregion
@@ -23,8 +24,32 @@ namespace SpotThatFireWebApp.Controllers
 
             var fires = fireList;
             var locations = new List<Fire>();
-            for(int i= 0; i < 10000; i++)
-            //foreach (Fire fire in fires)
+
+            locations.AddRange(fireRaportedByAuthorities);
+            locations.AddRange(GetLocation(fireList));
+
+            return View(locations);
+        }
+
+        public ActionResult SaveFireLocation(Location location)
+        {
+            fireRaportedByAuthorities.Add(new Fire()
+            {
+                Latitude = location.Latitude,
+                Longitude = location.Longitude,
+                Confidence = 100
+            });
+            return RedirectToAction("Index");
+        }
+
+        #region UpdateData
+
+
+        public List<Fire> GetLocation(List<Fire> fires)
+        {
+            var locations = new List<Fire>();
+            var lenght = fires.Count > 9000 ? 9000 : fires.Count;
+            for (int i = 0; i < lenght; i++)
             {
                 var f = new Fire()
                 {
@@ -33,22 +58,15 @@ namespace SpotThatFireWebApp.Controllers
                 };
                 locations.Add(f);
             }
-            return View(locations);
-        }
 
-        public ActionResult SaveFireLocation(Location location)
-        {
-            
-            return RedirectToAction("Index");
+            return locations;
         }
-
-        #region UpdateData
 
 
         public void UpdateData()
         {
             var startTimeSpan = TimeSpan.Zero;
-            var periodTimeSpan = TimeSpan.FromSeconds(30);
+            var periodTimeSpan = TimeSpan.FromHours(1);
 
             Update();
 
@@ -62,7 +80,7 @@ namespace SpotThatFireWebApp.Controllers
         public void Update()
         {
             string remoteUri = "https://firms.modaps.eosdis.nasa.gov/data/active_fire/c6/csv/MODIS_C6_Global_24h.csv";
-            string fileName = @"C:\WorkSpace\Programs\Git\DarkMatter\data.csv", myStringWebResource = null;
+            string fileName = @"C:\WorkSpace\Work\Github\DarkMatter\data.csv", myStringWebResource = null;
 
             // Create a new WebClient instance.
             using (WebClient myWebClient = new WebClient())
@@ -87,7 +105,7 @@ namespace SpotThatFireWebApp.Controllers
         {
             fireList.Clear();
 
-            var fires = CsvLoader.Load(@"C:\WorkSpace\Programs\Git\DarkMatter\data.csv");
+            var fires = CsvLoader.Load(@"C:\WorkSpace\Work\Github\DarkMatter\data.csv");
             foreach (var fire in fires)
             {
                 if (fire.Confidence < 50)
