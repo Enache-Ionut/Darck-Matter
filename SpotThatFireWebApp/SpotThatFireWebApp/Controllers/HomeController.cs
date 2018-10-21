@@ -23,18 +23,24 @@ namespace SpotThatFireWebApp.Controllers
 
             var fires = fireList;
             var locations = new List<Fire>();
-            foreach (Fire fire in fires)
+            for(int i= 0; i < 10000; i++)
+            //foreach (Fire fire in fires)
             {
                 var f = new Fire()
                 {
-                    Latitude = fire.Latitude,
-                    Longitude = fire.Longitude
+                    Latitude = fires[i].Latitude,
+                    Longitude = fires[i].Longitude
                 };
                 locations.Add(f);
             }
             return View(locations);
         }
 
+        public ActionResult SaveFireLocation(Location location)
+        {
+            
+            return RedirectToAction("Index");
+        }
 
         #region UpdateData
 
