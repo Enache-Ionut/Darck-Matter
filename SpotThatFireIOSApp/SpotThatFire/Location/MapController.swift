@@ -16,6 +16,8 @@ class MapController {
     private var currentLocation: CLLocation?
     private var fireAnnotations: [MKAnnotation]
 
+    weak var stubData: StubData?
+    
     var pinPointFire = UIImage(named: "pinPoint")
     var showFiresOnMap: Bool
     var networkManager: NetworkManager?
@@ -33,7 +35,7 @@ class MapController {
     }
     
     func centerMapOnLocation() {
-        shouldCenterMapOnLocation = true
+        centerMapOn(location: self.currentLocation!, withRadius: 750)
     }
     
     private func centerMapOn(location: CLLocation, withRadius radius: Double) {
@@ -45,14 +47,19 @@ class MapController {
         networkManager?.getFireLocations(location: currentLocation!, rangeInMeters: 2500)
     }
     
-    func showFiresAround(locations: [CLLocation]) {
+    func addFires(locations: [CLLocation]) {
+        for location in locations {
+            let annotation = MKPointAnnotation()
+            annotation.coordinate.latitude = location.coordinate.latitude
+            annotation.coordinate.longitude = location.coordinate.longitude
+            fireAnnotations.append(annotation)
+        }
+    }
+    
+    func showFiresAround() {
         if(showFiresOnMap) {
-            for location in locations {
-                let annotation = MKPointAnnotation()
-                annotation.coordinate.latitude = location.coordinate.latitude
-                annotation.coordinate.longitude = location.coordinate.longitude
+            for annotation in fireAnnotations {
                 mkMapView.addAnnotation(annotation)
-                fireAnnotations.append(annotation)
             }
         }
     }
@@ -60,6 +67,22 @@ class MapController {
     func removeFiresAround() {
         mkMapView.removeAnnotations(fireAnnotations)
         fireAnnotations.removeAll()
+    }
+    
+    func dropPinOnLocation() {
+        let annotation = MKPointAnnotation()
+        annotation.coordinate.latitude = currentLocation?.coordinate.latitude ?? 23
+        annotation.coordinate.longitude = currentLocation?.coordinate.longitude ?? 44
+        stubData?.addFireLocation(location: currentLocation!)
+        self.requestFirestAround()
+        self.showFiresAround()
+    }
+    
+    func dropPinOnLocation(location: CLLocation) {
+        let annotation = MKPointAnnotation()
+        annotation.coordinate.latitude = location.coordinate.latitude ?? 23
+        annotation.coordinate.longitude = location.coordinate.longitude ?? 44
+        mkMapView.addAnnotation(annotation)
     }
 }
 

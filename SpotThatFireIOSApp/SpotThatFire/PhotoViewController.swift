@@ -12,7 +12,7 @@ import CoreLocation
 class PhotoViewController: UIViewController {
 
     @IBOutlet weak var imageChosenView: UIImageView!
-    
+    weak var previousController: ViewController?
     var currentLocation: CLLocation?
     var networkManager: NetworkManager?
     
@@ -45,6 +45,8 @@ class PhotoViewController: UIViewController {
         if let networkMan = networkManager, let currLoc = currentLocation {
             networkMan.upload(location: currLoc)
         }
+        
+        dismiss(animated: true, completion: previousController?.showFireReported)
     }
     
 }

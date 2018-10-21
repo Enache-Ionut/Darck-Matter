@@ -14,6 +14,7 @@ class NetworkManager: NSObject {
     private var tempFireLocations = [CLLocation]()
     private var session: URLSession
     weak var mapView: MapController?
+    weak var stubData: StubData?
     var urlFireLocations = URL(string: "http://192.168.0.118:80/darkmatter.json")
     
     override init() {
@@ -30,9 +31,12 @@ class NetworkManager: NSObject {
     }
     
     func getFireLocations(location: CLLocation, rangeInMeters: Double) {
-        self.getFireLocations { (locations) in
+        /*self.getFireLocations { (locations) in
             self.mapView?.showFiresAround(locations: locations)
         }
+        */
+        self.mapView?.addFires(locations: stubData!.getFireLocations())
+        self.mapView?.showFiresAround()
     }
     
     private func getFireLocations(completitionHandler completion:@escaping ([CLLocation]) -> Void) {
