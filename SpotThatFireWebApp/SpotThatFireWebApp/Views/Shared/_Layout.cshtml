@@ -20,7 +20,14 @@
         var map = new google.maps.Map(document.getElementById('map'), {
             center: { lat: -33.8688, lng: 151.2195 },
             zoom: 10,
-            disableDefaultUI: true
+            disableDefaultUI: true,
+            mapTypeControl: true,
+            scaleControl: true,
+            gestureHandling: 'greedy',
+            mapTypeControlOptions: {
+                style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+                position: google.maps.ControlPosition.TOP_RIGHT
+            }
         });
         displayFire(map);
         // Create the search box and link it to the UI element.
@@ -89,11 +96,15 @@
 
     function reportFire() {
         keepLocation = true;
-        console.log("fire reported");
+        $('#report-alert').addClass("hide-opacity").delay(3000).queue(function (next) {
+            $(this).removeClass("hide-opacity");
+            next();
+        });
+
         var model = new Object();
         model.Latitude = currentLocation.lat();
         model.Longitude = currentLocation.lng();
-         jQuery.ajax({
+        jQuery.ajax({
             type: "POST",
             url: "@Url.Action("SaveFireLocation", "Home")",
             dataType: "json",
@@ -106,8 +117,9 @@
                 alert(errMsg);
             }
         });
-    }
 
+        console.log("fire reported");
+    }
 
     function placeMarker(position, map) {
         // if last pin was not reported, then remove it
@@ -115,6 +127,8 @@
             markers[markers.length - 1].setMap(null);
 
         keepLocation = false;
+        $('#report-alert').removeClass("hide-opacity");
+
         currentLocation = position;
         var marker = new google.maps.Marker({
             position: position,
@@ -182,11 +196,11 @@
         padding: 5px 11px;
     }
 
-    .pac-controls label {
-        font-family: Roboto;
-        font-size: 13px;
-        font-weight: 300;
-    }
+        .pac-controls label {
+            font-family: Roboto;
+            font-size: 13px;
+            font-weight: 300;
+        }
 
     #pac-input {
         background-color: #fff;
@@ -197,16 +211,14 @@
         padding: 0 11px 0 13px;
         text-overflow: ellipsis;
         width: 400px;
-
-
         position: absolute;
         top: 30px !important;
         left: 30px !important;
     }
 
-    #pac-input:focus {
-        border-color: #4d90fe;
-    }
+        #pac-input:focus {
+            border-color: #4d90fe;
+        }
 
     #title {
         color: #fff;
@@ -218,6 +230,19 @@
 
     #target {
         width: 345px;
+    }
+
+
+    .successful {
+        opacity: 0;
+        -webkit-transition: opacity 1s ease-in-out;
+        -moz-transition: opacity 1s ease-in-out;
+        -ms-transition: opacity 1s ease-in-out;
+        -o-transition: opacity 1s ease-in-out;
+        position: absolute;
+        right: calc(50% - 300px);
+        top: 150px;
+        font-weight: 700 !important;
     }
 </style>
 </html>

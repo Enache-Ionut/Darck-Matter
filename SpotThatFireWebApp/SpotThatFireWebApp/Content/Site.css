@@ -1,6 +1,7 @@
 ﻿body {
     padding-top: 50px;
     padding-bottom: 20px;
+    font-weight: 700;
 }
 
 /* Set padding to keep content from hitting the edges */
@@ -31,4 +32,9 @@ textarea {
 #map {
     height: 100vh;
     width: 100%; /* The width is the width of the web page */
+}
+
+div .hide-opacity {
+    opacity: 1;
+    display: block;
 }
