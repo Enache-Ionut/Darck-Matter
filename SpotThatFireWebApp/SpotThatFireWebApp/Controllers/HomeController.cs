@@ -16,6 +16,7 @@ namespace SpotThatFireWebApp.Controllers
         private static List<Fire> fireRaportedByAuthorities = new List<Fire>();
         private static List<Fire> fireList = new List<Fire>();
         private static System.Threading.Timer timer;
+        private static bool loaded = false;
 
         #endregion
 
@@ -35,7 +36,7 @@ namespace SpotThatFireWebApp.Controllers
 
             using (var writer = new StreamWriter(@"C:\inetpub\wwwroot\darkmatter.json"))
             {
-                writer.Write(json);
+                writer.Write("{\"data\":" + json + "}");
             }
 
             return View(locations);
@@ -58,7 +59,7 @@ namespace SpotThatFireWebApp.Controllers
         public List<Fire> GetLocation(List<Fire> fires)
         {
             var locations = new List<Fire>();
-            var lenght = fires.Count > 9000 ? 9000 : fires.Count;
+            var lenght = fires.Count > 1000 ? 1000 : fires.Count;
             for (int i = 0; i < lenght; i++)
             {
                 var f = new Fire()
@@ -78,12 +79,15 @@ namespace SpotThatFireWebApp.Controllers
             var startTimeSpan = TimeSpan.Zero;
             var periodTimeSpan = TimeSpan.FromHours(1);
 
-            Update();
-
-            timer = new System.Threading.Timer((e) =>
+            if (false == loaded)
             {
                 Update();
-            }, null, startTimeSpan, periodTimeSpan);
+                loaded = true;
+            }
+            //timer = new System.Threading.Timer((e) =>
+            //{
+            //   Update();
+            //}, null, startTimeSpan, periodTimeSpan);
         }
 
 
